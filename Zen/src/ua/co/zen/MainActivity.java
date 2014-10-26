@@ -20,10 +20,10 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
      
-	protected static final int RESULT_SPEECH = 1;
-	 private ImageButton headerButton;
-	 private Button infoButton;
-	 private ImageButton voiceButton;
+	protected static final int RESULT_SPEECH = 1; 
+	 private ImageButton headerButton; //Красная кнопка
+	 private Button infoButton;        //Белая кнопка - строка информации
+	 private ImageButton voiceButton;  //Кнопка управления голосом
 	 private ArrayList<String> textVoice; //Массив распознаных Google'ом фраз
 	
     @Override
