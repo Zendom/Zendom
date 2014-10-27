@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.Menu;
@@ -31,10 +32,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        infoButton = (Button) findViewById(R.id.infoButton);
-        
-        
        
+        infoButton = (Button) findViewById(R.id.infoButton);
+        Typeface tp = Typeface.createFromAsset(getAssets(), "fonts/ptsans.ttf");
+        infoButton.setTypeface(tp);
+
+        
         headerButton = (ImageButton) findViewById(R.id.headerButton);
         headerButton.setOnClickListener(new View.OnClickListener() {
 	    	 
@@ -110,3 +113,4 @@ public class MainActivity extends Activity {
     }
     
 }
+
