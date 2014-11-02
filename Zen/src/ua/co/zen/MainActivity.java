@@ -25,7 +25,9 @@ public class MainActivity extends Activity {
 	 private ImageButton headerButton; //Красная кнопка
 	 private Button infoButton;        //Белая кнопка - строка информации
 	 private ImageButton voiceButton;  //Кнопка управления голосом
+	 private ImageButton tempButton;   //Кнопка экрана температур
 	 private ArrayList<String> textVoice; //Массив распознаных Google'ом фраз
+	 private String bedroomTemp = "40", kitchenTemp = "35", toiletTemp = "12", streetTemp = "-15";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,6 @@ public class MainActivity extends Activity {
          voiceButton = (ImageButton) findViewById(R.id.voiceButton);
          //Слушаем голос по клику на кнопку. Возвращаем результат в массив строк
 	     voiceButton.setOnClickListener(new View.OnClickListener() {
-	    	 
 	            @Override
 	            public void onClick(View v) {
 	 
@@ -65,6 +66,29 @@ public class MainActivity extends Activity {
 	                } catch (ActivityNotFoundException a) {
 	                    Toast t = Toast.makeText(getApplicationContext(),
 	                            "Это говно не поддерживает распознование голоса",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
+	      
+	      tempButton = (ImageButton) findViewById(R.id.tempButton);
+	      tempButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, Temperature.class);
+	                intent.putExtra("bedroomTemp", bedroomTemp);
+	                intent.putExtra("kitchenTemp", kitchenTemp);
+	                intent.putExtra("toiletTemp", toiletTemp);
+	                intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка в передаче температур",
 	                            Toast.LENGTH_SHORT);
 	                    t.show();
 	                }
@@ -108,7 +132,6 @@ public class MainActivity extends Activity {
             }
             break;
         }
- 
         }
     }
     
