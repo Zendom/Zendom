@@ -26,8 +26,10 @@ public class MainActivity extends Activity {
 	 private Button infoButton;        //Белая кнопка - строка информации
 	 private ImageButton voiceButton;  //Кнопка управления голосом
 	 private ImageButton tempButton;   //Кнопка экрана температур
+	 private ImageButton waterButton;   //Кнопка экрана протечек
+	 private ImageButton electButton;   //Кнопка экрана протечек
 	 private ArrayList<String> textVoice; //Массив распознаных Google'ом фраз
-	 private String bedroomTemp = "40", kitchenTemp = "35", toiletTemp = "12", streetTemp = "-15";
+	 private String bedroomTemp = "15°", kitchenTemp = "25°", toiletTemp = "35°", streetTemp = "-25°";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class MainActivity extends Activity {
 	            @Override
 	            public void onClick(View v) {
 	 
-	                Intent intent = new Intent(MainActivity.this, Temperature.class);
+	                Intent intent = new Intent(MainActivity.this, TemperatureActivity.class);
 	                intent.putExtra("bedroomTemp", bedroomTemp);
 	                intent.putExtra("kitchenTemp", kitchenTemp);
 	                intent.putExtra("toiletTemp", toiletTemp);
@@ -89,6 +91,52 @@ public class MainActivity extends Activity {
 	                } catch (ActivityNotFoundException a) {
 	                    Toast t = Toast.makeText(getApplicationContext(),
 	                            "Ошибка в передаче температур",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
+	      
+	      waterButton = (ImageButton) findViewById(R.id.waterButton);
+	      waterButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, WaterActivity.class);
+	                // intent.putExtra("bedroomTemp", bedroomTemp);
+	                // intent.putExtra("kitchenTemp", kitchenTemp);
+	                // intent.putExtra("toiletTemp", toiletTemp);
+	                // intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка с WaterActivity",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
+	      
+	      electButton = (ImageButton) findViewById(R.id.electButton);
+	      electButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, ElectricActivity.class);
+	                // intent.putExtra("bedroomTemp", bedroomTemp);
+	                // intent.putExtra("kitchenTemp", kitchenTemp);
+	                // intent.putExtra("toiletTemp", toiletTemp);
+	                // intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка с ElectricActivity",
 	                            Toast.LENGTH_SHORT);
 	                    t.show();
 	                }

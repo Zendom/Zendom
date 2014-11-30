@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Temperature extends Activity {
+public class TemperatureActivity extends Activity {
 	private TextView bedroomTemp;
 	private TextView kitchenTemp;
 	private TextView toiletTemp;

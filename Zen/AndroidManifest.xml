@@ -23,12 +23,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Temperature"
+            android:name=".TemperatureActivity"
             android:label="@string/title_activity_temperature"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ua.co.zen.MainActivity" />
+        </activity>
+        <activity
+            android:name=".WaterActivity"
+            android:label="@string/title_activity_water" >
+        </activity>
+        <activity
+            android:name=".ElectricActivity"
+            android:label="@string/title_activity_electric" >
         </activity>
     </application>
 
