@@ -38,6 +38,22 @@
             android:name=".ElectricActivity"
             android:label="@string/title_activity_electric" >
         </activity>
+        <activity
+            android:name=".MultimediaActivity"
+            android:label="@string/title_activity_multimedia" >
+        </activity>
+        <activity
+            android:name=".CameraActivity"
+            android:label="@string/title_activity_camera" >
+        </activity>
+        <activity
+            android:name=".DoorActivity"
+            android:label="@string/title_activity_door" >
+        </activity>
+        <activity
+            android:name=".LightActivity"
+            android:label="@string/title_activity_light" >
+        </activity>
     </application>
 
 </manifest>

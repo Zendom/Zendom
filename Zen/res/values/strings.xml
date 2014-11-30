@@ -8,5 +8,9 @@
     <string name="title_activity_water">Протечки</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_electric">Электричество</string>
+    <string name="title_activity_multimedia">Мультимедиа</string>
+    <string name="title_activity_camera">Камера</string>
+    <string name="title_activity_door">Двери и окна</string>
+    <string name="title_activity_light">Свет</string>
 
 </resources>

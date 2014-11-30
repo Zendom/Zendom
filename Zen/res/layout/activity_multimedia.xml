@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+   android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#484848"
-    tools:context="ua.co.zen.MainActivity" >
-
-   <GridLayout
+    tools:context="ua.co.zen.MultimediaActivity" >
+    
+	<GridLayout
        android:id="@+id/gridLayout1"
        android:layout_width="fill_parent"
        android:layout_height="fill_parent"
@@ -34,104 +34,94 @@
               android:text=" " />
 
        <ImageButton
-           android:id="@+id/statusButton"
-           android:layout_width="match_parent"
-           android:layout_height="70dp"
-           android:layout_column="0"
-           android:layout_gravity="left|top"
-           android:layout_row="4"
-           android:background="@null"
-           android:src="@drawable/zen_3" />
-
-       <ImageButton
-           android:id="@+id/electricButton"
+           android:id="@+id/soundMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="left|top"
            android:layout_row="5"
            android:background="@null"
-           android:src="@drawable/zen_4" />
+           android:src="@drawable/zen_multi_1" />
 
        <ImageButton
-           android:id="@+id/cameraButton"
+           android:id="@+id/volupMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="center_horizontal|top"
            android:layout_row="5"
            android:background="@null"
-           android:src="@drawable/zen_5" />
+           android:src="@drawable/zen_multi_2" />
 
        <ImageButton
-           android:id="@+id/tempButton"
+           android:id="@+id/onMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="right|top"
            android:layout_row="5"
            android:background="@null"
-           android:src="@drawable/zen_6" />
+           android:src="@drawable/zen_multi_3" />
 
        <ImageButton
-           android:id="@+id/securityButton"
+           android:id="@+id/backMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="left|top"
            android:layout_row="6"
            android:background="@null"
-           android:src="@drawable/zen_7" />
+           android:src="@drawable/zen_multi_4" />
 
        <ImageButton
-           android:id="@+id/voiceButton"
+           android:id="@+id/playMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="center_horizontal|top"
            android:layout_row="6"
            android:background="@null"
-           android:src="@drawable/zen_8" />
+           android:src="@drawable/zen_multi_5" />
 
        <ImageButton
-           android:id="@+id/waterButton"
+           android:id="@+id/forwMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="right|top"
            android:layout_row="6"
            android:background="@null"
-           android:src="@drawable/zen_9" />
+           android:src="@drawable/zen_multi_6" />
 
        <ImageButton
-           android:id="@+id/doorButton"
+           android:id="@+id/stopMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="left|top"
            android:layout_row="7"
            android:background="@null"
-           android:src="@drawable/zen_10" />
+           android:src="@drawable/zen_multi_7" />
 
        <ImageButton
-           android:id="@+id/multiButton"
+           android:id="@+id/voldownMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="center_horizontal|top"
            android:layout_row="7"
            android:background="@null"
-           android:src="@drawable/zen_11" />
+           android:src="@drawable/zen_multi_8" />
 
        <ImageButton
-           android:id="@+id/lightButton"
+           android:id="@+id/pauseMulti"
            android:layout_width="120dp"
            android:layout_height="120dp"
            android:layout_column="0"
            android:layout_gravity="right|top"
            android:layout_row="7"
            android:background="@null"
-           android:src="@drawable/zen_12" />
+           android:src="@drawable/zen_multi_9" />
 
    </GridLayout>
 

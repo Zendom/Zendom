@@ -27,7 +27,11 @@ public class MainActivity extends Activity {
 	 private ImageButton voiceButton;  //Кнопка управления голосом
 	 private ImageButton tempButton;   //Кнопка экрана температур
 	 private ImageButton waterButton;   //Кнопка экрана протечек
-	 private ImageButton electButton;   //Кнопка экрана протечек
+	 private ImageButton electButton;   //Кнопка экрана электричества
+	 private ImageButton multiButton;   //Кнопка экрана мультимедия
+	 private ImageButton cameraButton;   //Кнопка экрана камеры
+	 private ImageButton doorButton;   //Кнопка экрана дверей и окон
+	 private ImageButton lightButton;   //Кнопка экрана дверей и окон
 	 private ArrayList<String> textVoice; //Массив распознаных Google'ом фраз
 	 private String bedroomTemp = "15°", kitchenTemp = "25°", toiletTemp = "35°", streetTemp = "-25°";
 	
@@ -120,7 +124,7 @@ public class MainActivity extends Activity {
 	            }
 	        });
 	      
-	      electButton = (ImageButton) findViewById(R.id.electButton);
+	      electButton = (ImageButton) findViewById(R.id.electricButton);
 	      electButton.setOnClickListener(new View.OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
@@ -142,7 +146,98 @@ public class MainActivity extends Activity {
 	                }
 	            }
 	        });
-        
+	      
+	      multiButton = (ImageButton) findViewById(R.id.multiButton);
+	      multiButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, MultimediaActivity.class);
+	                // intent.putExtra("bedroomTemp", bedroomTemp);
+	                // intent.putExtra("kitchenTemp", kitchenTemp);
+	                // intent.putExtra("toiletTemp", toiletTemp);
+	                // intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка с WaterActivity",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
+	      
+	      cameraButton = (ImageButton) findViewById(R.id.cameraButton);
+	      cameraButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+	                // intent.putExtra("bedroomTemp", bedroomTemp);
+	                // intent.putExtra("kitchenTemp", kitchenTemp);
+	                // intent.putExtra("toiletTemp", toiletTemp);
+	                // intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка с CameraActivity",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
+	      
+	      doorButton = (ImageButton) findViewById(R.id.doorButton);
+	      doorButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, DoorActivity.class);
+	                // intent.putExtra("bedroomTemp", bedroomTemp);
+	                // intent.putExtra("kitchenTemp", kitchenTemp);
+	                // intent.putExtra("toiletTemp", toiletTemp);
+	                // intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка с CameraActivity",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
+	      
+	      lightButton = (ImageButton) findViewById(R.id.lightButton);
+	      lightButton.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	 
+	                Intent intent = new Intent(MainActivity.this, LightActivity.class);
+	                // intent.putExtra("bedroomTemp", bedroomTemp);
+	                // intent.putExtra("kitchenTemp", kitchenTemp);
+	                // intent.putExtra("toiletTemp", toiletTemp);
+	                // intent.putExtra("streetTemp", streetTemp);
+	                
+	                try {
+	                    startActivity(intent);
+	                    
+	                } catch (ActivityNotFoundException a) {
+	                    Toast t = Toast.makeText(getApplicationContext(),
+	                            "Ошибка с LightActivity",
+	                            Toast.LENGTH_SHORT);
+	                    t.show();
+	                }
+	            }
+	        });
         
     }
 
