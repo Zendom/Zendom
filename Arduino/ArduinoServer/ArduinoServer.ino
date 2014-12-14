@@ -145,13 +145,11 @@ void XML_response(EthernetClient cl)
     cl.print("<?xml version = \"1.0\" ?>");
     cl.print("<inputs>");
     // read analog inputs
-    for (count = 2; count <= 5; count++) { // A2 to A5
-        analog_val = analogRead(count);
         cl.print("<analog>");
         cl.print(analog_val);
         cl.println("</analog>");
-    }
-    // read switches
+        
+  
     for (count = 0; count < 3; count++) {
         cl.print("<switch>");
         if (digitalRead(sw_arr[count])) {
