@@ -84,9 +84,9 @@ public final class R {
         public static final int Kostil=0x7f080011;
         public static final int action_settings=0x7f080036;
         public static final int backMulti=0x7f080024;
-        public static final int badroomLight=0x7f080014;
         public static final int bathroomWater=0x7f080033;
         public static final int bedroomImage=0x7f08002a;
+        public static final int bedroomLight=0x7f080014;
         public static final int bedroomTemp=0x7f08002e;
         public static final int button1=0x7f080003;
         public static final int cameraButton=0x7f080019;
