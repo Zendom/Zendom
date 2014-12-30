@@ -304,11 +304,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public String getLED() {
-		return LED;
-
-	}
-
 	// DownloadXML AsyncTask
 	public class DownloadXML extends AsyncTask<String, Void, Void> {
 		@Override
@@ -365,8 +360,7 @@ public class MainActivity extends Activity {
 	}
 
 	public static class sendGet extends AsyncTask<String, Void, Void> {
-		private Exception exception;
-
+		
 		protected Void doInBackground(String... urls) {
 			try {
 				HttpClient client = new DefaultHttpClient();
@@ -384,7 +378,6 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 				}
 			} catch (Exception e) {
-				this.exception = e;
 				return null;
 			}
 			return null;

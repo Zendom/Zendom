@@ -22,32 +22,34 @@ public class LightActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_light);
-		
+			
 		infoButton = (Button) findViewById(R.id.infoButton);
 	
 		toiletLight = (ImageButton) findViewById(R.id.toiletLight);
-		LED = MainActivity.LED;
+		LED = MainActivity.LED;//Берем переменную из MainActivity
 		
 		if (LED.equals("checked")){
-		toiletLight.setImageResource(R.drawable.zen_light_1);
+			toiletLight.setImageResource(R.drawable.zen_light_1);
 		} else {
 			toiletLight.setImageResource(R.drawable.zen_light_black_5);
 		}
 		
-		
+		// работает с помощь магии
 		toiletLight.setOnClickListener(new View.OnClickListener() {	 
 			@Override
             public void onClick(View v) {
-            if (LED.equals("checked")){
-            	toiletLight.setImageResource(R.drawable.zen_light_black_5);
-               String addurl = "?LED1=0";
-               new MainActivity.sendGet().execute("http://192.168.1.33" + addurl);
-                infoButton.setText("Свет в спальне выключен");  
-            } else {
+            if (LED.equals("checked")){ //если лампа была включена
+            	toiletLight.setImageResource(R.drawable.zen_light_black_5); //меняем картинку
+               String addurl = "?LED1=0"; //выключаем лампу
+               new MainActivity.sendGet().execute("http://192.168.1.33" + addurl); //отправляем запрос
+                infoButton.setText("Свет в спальне выключен"); 
+                LED = "unchecked"; //меняем статус
+            } else { //проделываем обратные действия если лампа была выключена
             	toiletLight.setImageResource(R.drawable.zen_light_1);
             	String addurl = "?LED1=1";
             	new MainActivity.sendGet().execute("http://192.168.1.33" + addurl);
                infoButton.setText("Свет в спальне включен");
+               LED = "checked";
             }
             }
         });
