@@ -49,13 +49,15 @@ public class MainActivity extends Activity {
 	private ImageButton doorButton; // Кнопка экрана дверей и окон
 	private ImageButton lightButton; // Кнопка экрана дверей и окон
 	private ArrayList<String> textVoice; // Массив распознаных Google'ом фраз
-	private String bedroomTemp = "15°", kitchenTemp = "25°",
-			toiletTemp = "35°", streetTemp = "-25°";
+	private String bedroomTemp, kitchenTemp,
+			toiletTemp, streetTemp;
 
 	private Timer mTimer;
 	private MyTimerTask mMyTimerTask;
 	public NodeList nodelist;
-	public static String LED;
+	public static String LED = "Умный дом", current, bed_temp, kitch_temp, toil_temp, street_temp;
+	public static String toil_water, bath_water, wash_water, kitch_water, main_door, bed_wind, kab_wind, safe_wind;
+	public static String toil_light, hall_light, bed_light, kitch_light;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,10 +107,10 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this,
 						TemperatureActivity.class);
-				intent.putExtra("bedroomTemp", bedroomTemp);
-				intent.putExtra("kitchenTemp", kitchenTemp);
-				intent.putExtra("toiletTemp", toiletTemp);
-				intent.putExtra("streetTemp", streetTemp);
+				intent.putExtra("bedroomTemp", bed_temp);
+				intent.putExtra("kitchenTemp", kitch_temp);
+				intent.putExtra("toiletTemp", toil_temp);
+				intent.putExtra("streetTemp", street_temp);
 
 				try {
 					startActivity(intent);
@@ -128,17 +130,17 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this,
 						WaterActivity.class);
-				// intent.putExtra("bedroomTemp", bedroomTemp);
-				// intent.putExtra("kitchenTemp", kitchenTemp);
-				// intent.putExtra("toiletTemp", toiletTemp);
-				// intent.putExtra("streetTemp", streetTemp);
+				 intent.putExtra("toil_water", toil_water);
+				 intent.putExtra("bath_water", bath_water);
+				 intent.putExtra("wash_water", wash_water);
+				 intent.putExtra("kitch_water", kitch_water);
 
 				try {
 					startActivity(intent);
 
 				} catch (ActivityNotFoundException a) {
 					Toast t = Toast.makeText(getApplicationContext(),
-							"Ошибка с WaterActivity", Toast.LENGTH_SHORT);
+							"Ошибка с передачи состояний протечек", Toast.LENGTH_SHORT);
 					t.show();
 				}
 			}
@@ -151,7 +153,7 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this,
 						ElectricActivity.class);
-				// intent.putExtra("bedroomTemp", bedroomTemp);
+				 intent.putExtra("current", current);
 				// intent.putExtra("kitchenTemp", kitchenTemp);
 				// intent.putExtra("toiletTemp", toiletTemp);
 				// intent.putExtra("streetTemp", streetTemp);
@@ -217,13 +219,13 @@ public class MainActivity extends Activity {
 		doorButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+			 
 				Intent intent = new Intent(MainActivity.this,
 						DoorActivity.class);
-				// intent.putExtra("bedroomTemp", bedroomTemp);
-				// intent.putExtra("kitchenTemp", kitchenTemp);
-				// intent.putExtra("toiletTemp", toiletTemp);
-				// intent.putExtra("streetTemp", streetTemp);
+				 intent.putExtra("main_door", main_door);
+				 intent.putExtra("bed_wind", bed_wind);
+				 intent.putExtra("kab_wind", kab_wind);
+				 intent.putExtra("safe_wind", safe_wind);
 
 				try {
 					startActivity(intent);
@@ -298,10 +300,47 @@ public class MainActivity extends Activity {
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				// Пишем то, что распознали в текст кнопки
 				infoButton.setText(textVoice.get(0));
+				voiceСontrol (textVoice.get(0));
 			}
 			break;
 		}
 		}
+	}
+	
+	protected void voiceСontrol (String reqtext){
+		if (reqtext.equals("включить свет в спальне")){
+			String addurl = "?bed_light=1"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("выключить свет в спальне")){
+			String addurl = "?bed_light=0"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("включить свет в туалете")){
+			String addurl = "?toil_light=1"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("выключить свет в туалете")){
+			String addurl = "?toil_light=0"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("включить свет в коридоре")){
+			String addurl = "?hall_light=1"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("выключить свет в коридоре")){
+			String addurl = "?hall_light=0"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("выключить свет на кухне")){
+			String addurl = "?kitch_light=0"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		if (reqtext.equals("выключить свет на кухне")){
+			String addurl = "?kitch_light=0"; // выключаем лампу
+			new sendGet().execute(URL + addurl); 
+		}
+		
 	}
 
 	// DownloadXML AsyncTask
@@ -342,17 +381,38 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void args) {
 			//if (nodelist.getLength() > 0) {
+			try {
 				for (int temp = 0; temp < nodelist.getLength(); temp++) {
 					Node nNode = nodelist.item(temp);
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
 						// Set the texts into TextViews from item nodes
-						// Get the title
-						infoButton.setText( "LED : "
-								+ getNode("LED", eElement) + "\n" + "\n");
-						LED =  getNode("LED", eElement);
+						// Get the title					
+						current =  getNode("current", eElement);
+						bed_temp =  getNode("bed_temp", eElement);
+						kitch_temp =  getNode("kitch_temp", eElement);
+						toil_temp =  getNode("toil_temp", eElement);
+						street_temp =  getNode("street_temp", eElement);
+						toil_water =  getNode("toil_water", eElement);
+						bath_water =  getNode("bath_water", eElement);
+						wash_water =  getNode("wash_water", eElement);
+						kitch_water =  getNode("kitch_water", eElement);
+						main_door =  getNode("main_door", eElement);
+						bed_wind =  getNode("bed_wind", eElement);
+						kab_wind =  getNode("kab_wind", eElement);
+						safe_wind =  getNode("safe_wind", eElement);
+						toil_light =  getNode("toil_light", eElement);
+						hall_light =  getNode("hall_light", eElement);
+						bed_light =  getNode("bed_light", eElement);
+						kitch_light =  getNode("kitch_light", eElement);
 					}
 				}
+			 } catch (NullPointerException e) {
+				 Toast t = Toast.makeText(getApplicationContext(),
+                         "Ошибка связи с мозгом. Невозможно получить состояния",
+                         Toast.LENGTH_SHORT);
+                 t.show();
+			 }
 			//}
 			// Close progressbar
 			// pDialog.dismiss();

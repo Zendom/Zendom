@@ -6,11 +6,8 @@
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.graphics.Typeface"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
-<fullyQualifiedTypeName name="ua.co.zen.R.id"/>
-<fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
 <fullyQualifiedTypeName name="ua.co.zen.Temperature"/>
 <fullyQualifiedTypeName name="android.content.Intent"/>
-<fullyQualifiedTypeName name="android.widget.ImageButton"/>
 <fullyQualifiedTypeName name="ua.co.zen.CameraActivity"/>
 <fullyQualifiedTypeName name="android.widget.ImageView"/>
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
@@ -30,7 +27,14 @@
 <fullyQualifiedTypeName name="org.apache.http.client.methods.HttpGet"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="org.apache.http.HttpEntity"/>
-<fullyQualifiedTypeName name="android.widget.Button"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.renderscript.Element"/>
+<fullyQualifiedTypeName name="android.widget.ImageButton"/>
+<fullyQualifiedTypeName name="android.widget.Button"/>
+<fullyQualifiedTypeName name="org.w3c.dom.NodeList"/>
+<fullyQualifiedTypeName name="ua.co.zen.R.id"/>
+<fullyQualifiedTypeName name="java.lang.Override"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity.sendGet"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity.DownloadXML"/>
 </qualifiedTypeNameHistroy>

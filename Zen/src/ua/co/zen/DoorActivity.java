@@ -1,6 +1,7 @@
 package ua.co.zen;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,7 +9,7 @@ import android.widget.ImageView;
 
 public class DoorActivity extends Activity {
 	
-	private ImageView enterDoor;
+	private ImageView enterDoor, windsleepDoor, windkabDoor, kladowDoor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +17,42 @@ public class DoorActivity extends Activity {
 		setContentView(R.layout.activity_door);
 		
 		enterDoor = (ImageView) findViewById(R.id.enterDoor);
-		enterDoor.setImageResource(R.drawable.zen_door_red_5);
+		windsleepDoor = (ImageView) findViewById(R.id.windsleepDoor);
+		windkabDoor = (ImageView) findViewById(R.id.windkabDoor);
+		kladowDoor = (ImageView) findViewById(R.id.kladowDoor);
+		
+		
+		Intent intent = getIntent();
+		String main_door = intent.getStringExtra("main_door");
+		String bed_wind = intent.getStringExtra("bed_wind");
+		String kab_wind = intent.getStringExtra("kab_wind");
+		String safe_wind = intent.getStringExtra("safe_wind");
+		
+		
+		if (main_door.equals("off")){
+			enterDoor.setImageResource(R.drawable.zen_door_green_1);
+		} else {
+			enterDoor.setImageResource(R.drawable.zen_door_red_5);
+		}
+		
+		if (bed_wind.equals("off")){
+			windsleepDoor.setImageResource(R.drawable.zen_door_green_2);
+		} else {
+			windsleepDoor.setImageResource(R.drawable.zen_door_red_6);
+		}
+		
+		if (kab_wind.equals("off")){
+			windkabDoor.setImageResource(R.drawable.zen_door_green_3);
+		} else {
+			windkabDoor.setImageResource(R.drawable.zen_door_red_7);
+		}
+		
+		if (safe_wind.equals("off")){
+			kladowDoor.setImageResource(R.drawable.zen_door_green_4);
+		} else {
+			kladowDoor.setImageResource(R.drawable.zen_door_red_8);
+		}
+		
 		
 	}
 

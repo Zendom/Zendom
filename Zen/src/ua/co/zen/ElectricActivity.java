@@ -1,6 +1,7 @@
 package ua.co.zen;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,6 +30,13 @@ public class ElectricActivity extends Activity {
         voltText = (TextView) findViewById(R.id.voltText);
         voltText.setTypeface(tp);
         
+        Intent intent = getIntent();
+		String current = intent.getStringExtra("current");
+		currentText.setText(current+"A");
+		
+		float cur = Float.parseFloat(current);
+		float pow = (226 * cur) / 1000;
+        powerText.setText(pow+" êÂò");
 	}
 
 	@Override

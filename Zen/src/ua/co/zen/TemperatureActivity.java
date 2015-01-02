@@ -39,10 +39,10 @@ public class TemperatureActivity extends Activity {
 			String toiletTempValue = intent.getStringExtra("toiletTemp");
 			String streetTempValue = intent.getStringExtra("streetTemp");
 			
-			bedroomTemp.setText(bedroomTempValue);
-			kitchenTemp.setText(kitchenTempValue);
-			toiletTemp.setText(toiletTempValue);
-			streetTemp.setText(streetTempValue);
+			bedroomTemp.setText(bedroomTempValue+"°");
+			kitchenTemp.setText(kitchenTempValue+"°");
+			toiletTemp.setText(toiletTempValue+"°");
+			streetTemp.setText(streetTempValue+"°");
 			
 	        
 	}
