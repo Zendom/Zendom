@@ -37,4 +37,8 @@
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity.sendGet"/>
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity.DownloadXML"/>
+<fullyQualifiedTypeName name="java.lang.RuntimeException"/>
+<fullyQualifiedTypeName name="java.lang.NullPointerException"/>
+<fullyQualifiedTypeName name="android.os.AsyncTask"/>
+<fullyQualifiedTypeName name="ua.co.zen.LightActivity.RefreshScreen"/>
 </qualifiedTypeNameHistroy>

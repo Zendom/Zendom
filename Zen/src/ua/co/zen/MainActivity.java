@@ -242,14 +242,15 @@ public class MainActivity extends Activity {
 		lightButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+                
 				Intent intent = new Intent(MainActivity.this,
 						LightActivity.class);
-				// intent.putExtra("bedroomTemp", bedroomTemp);
-				// intent.putExtra("kitchenTemp", kitchenTemp);
-				// intent.putExtra("toiletTemp", toiletTemp);
-				// intent.putExtra("streetTemp", streetTemp);
-
+				/*
+				 intent.putExtra("toil_light", toil_light);
+				 intent.putExtra("hall_light", hall_light);
+				 intent.putExtra("bed_light", bed_light);
+				 intent.putExtra("kitch_light", kitch_light);
+				*/
 				try {
 					startActivity(intent);
 
@@ -264,7 +265,7 @@ public class MainActivity extends Activity {
 		
 		 mTimer = new Timer();
 		 mMyTimerTask = new MyTimerTask();
-		 mTimer.schedule(mMyTimerTask, 10, 1000);
+		 mTimer.schedule(mMyTimerTask, 10, 2000);
 
 
 	}
@@ -332,8 +333,8 @@ public class MainActivity extends Activity {
 			String addurl = "?hall_light=0"; // выключаем лампу
 			new sendGet().execute(URL + addurl); 
 		}
-		if (reqtext.equals("выключить свет на кухне")){
-			String addurl = "?kitch_light=0"; // выключаем лампу
+		if (reqtext.equals("включить свет на кухне")){
+			String addurl = "?kitch_light=1"; // выключаем лампу
 			new sendGet().execute(URL + addurl); 
 		}
 		if (reqtext.equals("выключить свет на кухне")){
