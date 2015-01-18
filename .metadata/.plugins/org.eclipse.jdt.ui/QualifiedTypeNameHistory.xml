@@ -7,7 +7,6 @@
 <fullyQualifiedTypeName name="android.graphics.Typeface"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="ua.co.zen.Temperature"/>
-<fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="ua.co.zen.CameraActivity"/>
 <fullyQualifiedTypeName name="android.widget.ImageView"/>
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
@@ -30,7 +29,6 @@
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.renderscript.Element"/>
 <fullyQualifiedTypeName name="android.widget.ImageButton"/>
-<fullyQualifiedTypeName name="android.widget.Button"/>
 <fullyQualifiedTypeName name="org.w3c.dom.NodeList"/>
 <fullyQualifiedTypeName name="ua.co.zen.R.id"/>
 <fullyQualifiedTypeName name="java.lang.Override"/>
@@ -44,8 +42,12 @@
 <fullyQualifiedTypeName name="java.net.MalformedURLException"/>
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity.IfConnection"/>
 <fullyQualifiedTypeName name="ua.co.zen.Logic"/>
-<fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity.sendGet"/>
 <fullyQualifiedTypeName name="ua.co.zen.servicetest.MainService.DownloadXML"/>
 <fullyQualifiedTypeName name="java.lang.NullPointerException"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="android.widget.Button"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="ua.co.zen.servicetest.SecondActivity"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
 </qualifiedTypeNameHistroy>

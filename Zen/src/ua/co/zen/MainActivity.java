@@ -20,13 +20,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -56,16 +59,30 @@ public class MainActivity extends Activity {
 	private Timer mTimer;
 	private MyTimerTask mMyTimerTask;
 	public NodeList nodelist;
-	public static String LED = "Умный дом", current="null", bed_temp="null", kitch_temp="null", toil_temp="null", street_temp="null";
-	public static String toil_water="null", bath_water="null", wash_water="null", kitch_water="null", 
-			                    main_door="null", bed_wind="null", kab_wind="null", safe_wind="null";
-	public static String toil_light="null", hall_light="null", bed_light="null", kitch_light="null";
+	public static String LED = "Умный дом", current = "null",
+			bed_temp = "null", kitch_temp = "null", toil_temp = "null",
+			street_temp = "null";
+	public static String toil_water = "null", bath_water = "null",
+			wash_water = "null", kitch_water = "null", main_door = "null",
+			bed_wind = "null", kab_wind = "null", safe_wind = "null";
+	public static String toil_light = "null", hall_light = "null",
+			bed_light = "null", kitch_light = "null";
+
+	final String LOG_TAG = "myLogs";
+
+	boolean bound = false;
+	ServiceConnection sConn;
+	Intent intent;
+	MainService myService;
+	TextView tvInterval;
+	long interval;
+	boolean service_flag = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		headerButton = (ImageButton) findViewById(R.id.headerButton);
 		voiceButton = (ImageButton) findViewById(R.id.voiceButton);
 		tempButton = (ImageButton) findViewById(R.id.tempButton);
@@ -75,210 +92,245 @@ public class MainActivity extends Activity {
 		cameraButton = (ImageButton) findViewById(R.id.cameraButton);
 		doorButton = (ImageButton) findViewById(R.id.doorButton);
 		lightButton = (ImageButton) findViewById(R.id.lightButton);
-		
-		
 
-			infoButton = (Button) findViewById(R.id.infoButton);
-			Typeface tp = Typeface.createFromAsset(getAssets(), "fonts/ptsans.ttf");
-			infoButton.setTypeface(tp);
+		infoButton = (Button) findViewById(R.id.infoButton);
+		Typeface tp = Typeface.createFromAsset(getAssets(), "fonts/ptsans.ttf");
+		infoButton.setTypeface(tp);
 
-			
-			headerButton.setOnClickListener(new View.OnClickListener() {
+		headerButton.setOnClickListener(new View.OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					infoButton.setText(LED);
+			@Override
+			public void onClick(View v) {
+
+				/* ****************** */
+                if (service_flag) {
+                	startService(intent);
+                	service_flag = false;
+                } else {
+    				stopService(intent);
+    				myService.onDestroy();
+    				service_flag = true;
+                }  
+
+				/* ****************** */
+
+			}
+		});
+
+		// Слушаем голос по клику на кнопку. Возвращаем результат в массив строк
+		voiceButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent(
+						RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "ru-RU");
+
+				try {
+					startActivityForResult(intent, RESULT_SPEECH);
+					infoButton.setText(" ");
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Это говно не поддерживает распознование голоса",
+							Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			// Слушаем голос по клику на кнопку. Возвращаем результат в массив строк
-			voiceButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		tempButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					Intent intent = new Intent(
-							RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				Intent intent = new Intent(MainActivity.this,
+						TemperatureActivity.class);
+				intent.putExtra("bedroomTemp", bed_temp);
+				intent.putExtra("kitchenTemp", kitch_temp);
+				intent.putExtra("toiletTemp", toil_temp);
+				intent.putExtra("streetTemp", street_temp);
 
-					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "ru-RU");
+				try {
+					startActivity(intent);
 
-					try {
-						startActivityForResult(intent, RESULT_SPEECH);
-						infoButton.setText(" ");
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Это говно не поддерживает распознование голоса",
-								Toast.LENGTH_SHORT);
-						t.show();
-					}
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка в передаче температур", Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			tempButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		waterButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					Intent intent = new Intent(MainActivity.this,
-							TemperatureActivity.class);
-					intent.putExtra("bedroomTemp", bed_temp);
-					intent.putExtra("kitchenTemp", kitch_temp);
-					intent.putExtra("toiletTemp", toil_temp);
-					intent.putExtra("streetTemp", street_temp);
+				Intent intent = new Intent(MainActivity.this,
+						WaterActivity.class);
+				intent.putExtra("toil_water", toil_water);
+				intent.putExtra("bath_water", bath_water);
+				intent.putExtra("wash_water", wash_water);
+				intent.putExtra("kitch_water", kitch_water);
 
-					try {
-						startActivity(intent);
+				try {
+					startActivity(intent);
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка в передаче температур", Toast.LENGTH_SHORT);
-						t.show();
-					}
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка с передачи состояний протечек",
+							Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			waterButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		electButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					Intent intent = new Intent(MainActivity.this,
-							WaterActivity.class);
-					 intent.putExtra("toil_water", toil_water);
-					 intent.putExtra("bath_water", bath_water);
-					 intent.putExtra("wash_water", wash_water);
-					 intent.putExtra("kitch_water", kitch_water);
+				Intent intent = new Intent(MainActivity.this,
+						ElectricActivity.class);
+				intent.putExtra("current", current);
+				// intent.putExtra("kitchenTemp", kitchenTemp);
+				// intent.putExtra("toiletTemp", toiletTemp);
+				// intent.putExtra("streetTemp", streetTemp);
 
-					try {
-						startActivity(intent);
+				try {
+					startActivity(intent);
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка с передачи состояний протечек", Toast.LENGTH_SHORT);
-						t.show();
-					}
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка с ElectricActivity", Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			electButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		multiButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					Intent intent = new Intent(MainActivity.this,
-							ElectricActivity.class);
-					 intent.putExtra("current", current);
-					// intent.putExtra("kitchenTemp", kitchenTemp);
-					// intent.putExtra("toiletTemp", toiletTemp);
-					// intent.putExtra("streetTemp", streetTemp);
+				Intent intent = new Intent(MainActivity.this,
+						MultimediaActivity.class);
+				// intent.putExtra("bedroomTemp", bedroomTemp);
+				// intent.putExtra("kitchenTemp", kitchenTemp);
+				// intent.putExtra("toiletTemp", toiletTemp);
+				// intent.putExtra("streetTemp", streetTemp);
 
-					try {
-						startActivity(intent);
+				try {
+					startActivity(intent);
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка с ElectricActivity", Toast.LENGTH_SHORT);
-						t.show();
-					}
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка с WaterActivity", Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			multiButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		cameraButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					Intent intent = new Intent(MainActivity.this,
-							MultimediaActivity.class);
-					// intent.putExtra("bedroomTemp", bedroomTemp);
-					// intent.putExtra("kitchenTemp", kitchenTemp);
-					// intent.putExtra("toiletTemp", toiletTemp);
-					// intent.putExtra("streetTemp", streetTemp);
+				Intent intent = new Intent(MainActivity.this,
+						CameraActivity.class);
+				// intent.putExtra("bedroomTemp", bedroomTemp);
+				// intent.putExtra("kitchenTemp", kitchenTemp);
+				// intent.putExtra("toiletTemp", toiletTemp);
+				// intent.putExtra("streetTemp", streetTemp);
 
-					try {
-						startActivity(intent);
+				try {
+					startActivity(intent);
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка с WaterActivity", Toast.LENGTH_SHORT);
-						t.show();
-					}
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка с CameraActivity", Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			cameraButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		doorButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					Intent intent = new Intent(MainActivity.this,
-							CameraActivity.class);
-					// intent.putExtra("bedroomTemp", bedroomTemp);
-					// intent.putExtra("kitchenTemp", kitchenTemp);
-					// intent.putExtra("toiletTemp", toiletTemp);
-					// intent.putExtra("streetTemp", streetTemp);
+				Intent intent = new Intent(MainActivity.this,
+						DoorActivity.class);
+				intent.putExtra("main_door", main_door);
+				intent.putExtra("bed_wind", bed_wind);
+				intent.putExtra("kab_wind", kab_wind);
+				intent.putExtra("safe_wind", safe_wind);
 
-					try {
-						startActivity(intent);
+				try {
+					startActivity(intent);
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка с CameraActivity", Toast.LENGTH_SHORT);
-						t.show();
-					}
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка с CameraActivity", Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			doorButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-				 
-					Intent intent = new Intent(MainActivity.this,
-							DoorActivity.class);
-					 intent.putExtra("main_door", main_door);
-					 intent.putExtra("bed_wind", bed_wind);
-					 intent.putExtra("kab_wind", kab_wind);
-					 intent.putExtra("safe_wind", safe_wind);
+		lightButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-					try {
-						startActivity(intent);
+				Intent intent = new Intent(MainActivity.this,
+						LightActivity.class);
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка с CameraActivity", Toast.LENGTH_SHORT);
-						t.show();
-					}
+				// intent.putExtra("MainActivity", this);
+				// intent.putExtra("bed_light", bed_light);
+				// intent.putExtra("kitch_light", kitch_light);
+
+				try {
+					startActivity(intent);
+
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка с LightActivity", Toast.LENGTH_SHORT);
+					t.show();
 				}
-			});
+			}
+		});
 
-			
-			lightButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-			        
-					Intent intent = new Intent(MainActivity.this,
-							LightActivity.class);
-					
-					 //intent.putExtra("MainActivity", this);				
-					 //intent.putExtra("bed_light", bed_light);
-					 //intent.putExtra("kitch_light", kitch_light);
-					
-					try {
-						startActivity(intent);
+		mTimer = new Timer();
+		mMyTimerTask = new MyTimerTask();
+		mTimer.schedule(mMyTimerTask, 10, 2000);
+        
+        //неведомая хрень для работы сервиса
+		intent = new Intent(this, MainService.class);
+		sConn = new ServiceConnection() {
 
-					} catch (ActivityNotFoundException a) {
-						Toast t = Toast.makeText(getApplicationContext(),
-								"Ошибка с LightActivity", Toast.LENGTH_SHORT);
-						t.show();
-					}
-				}
-			});
+			public void onServiceConnected(ComponentName name, IBinder binder) {
+				Log.d(LOG_TAG, "MainActivity onServiceConnected");
+				myService = ((MainService.MyBinder) binder).getService();
+				bound = true;
+			}
 
-			 mTimer = new Timer();
-			 mMyTimerTask = new MyTimerTask();
-			 mTimer.schedule(mMyTimerTask, 10, 2000);
-		
+			public void onServiceDisconnected(ComponentName name) {
+				Log.d(LOG_TAG, "MainActivity onServiceDisconnected");
+				bound = false;
+			}
+		};
+	}
+
+	
+	//для запуска Service
+	@Override
+	protected void onStart() {
+		super.onStart();
+		bindService(intent, sConn, 0);
+	}
+	
+	//для остановки Service
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (!bound)
+			return;
+		unbindService(sConn);
+		bound = false;
 	}
 
 	@Override
@@ -312,49 +364,49 @@ public class MainActivity extends Activity {
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				// Пишем то, что распознали в текст кнопки
 				infoButton.setText(textVoice.get(0));
-				voiceСontrol (textVoice.get(0));
+				voiceСontrol(textVoice.get(0));
 			}
 			break;
 		}
 		}
 	}
-	
-	protected void voiceСontrol (String reqtext){
-		if (reqtext.equalsIgnoreCase("включить свет в спальне")){
+
+	protected void voiceСontrol(String reqtext) {
+		if (reqtext.equalsIgnoreCase("включить свет в спальне")) {
 			String addurl = "?bed_light=1"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("выключить свет в спальне")){
+		if (reqtext.equalsIgnoreCase("выключить свет в спальне")) {
 			String addurl = "?bed_light=0"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("включить свет в туалете")){
+		if (reqtext.equalsIgnoreCase("включить свет в туалете")) {
 			String addurl = "?toil_light=1"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("выключить свет в туалете")){
+		if (reqtext.equalsIgnoreCase("выключить свет в туалете")) {
 			String addurl = "?toil_light=0"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("включить свет в коридоре")){
+		if (reqtext.equalsIgnoreCase("включить свет в коридоре")) {
 			String addurl = "?hall_light=1"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("выключить свет в коридоре")){
+		if (reqtext.equalsIgnoreCase("выключить свет в коридоре")) {
 			String addurl = "?hall_light=0"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("включить свет на кухне")){
+		if (reqtext.equalsIgnoreCase("включить свет на кухне")) {
 			String addurl = "?kitch_light=1"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		if (reqtext.equalsIgnoreCase("выключить свет на кухне")){
+		if (reqtext.equalsIgnoreCase("выключить свет на кухне")) {
 			String addurl = "?kitch_light=0"; // выключаем лампу
-			new sendGet().execute(URL + addurl); 
+			new sendGet().execute(URL + addurl);
 		}
-		
+
 	}
-	
+
 	// DownloadXML AsyncTask
 	public class DownloadXML extends AsyncTask<String, Void, Void> {
 		@Override
@@ -383,50 +435,50 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void args) {
-			//if (nodelist.getLength() > 0) {
+			// if (nodelist.getLength() > 0) {
 			try {
 				for (int temp = 0; temp < nodelist.getLength(); temp++) {
 					Node nNode = nodelist.item(temp);
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
 						// Set the texts into TextViews from item nodes
-						// Get the title					
-						current =  getNode("current", eElement);
-						bed_temp =  getNode("bed_temp", eElement);
-						kitch_temp =  getNode("kitch_temp", eElement);
-						toil_temp =  getNode("toil_temp", eElement);
-						street_temp =  getNode("street_temp", eElement);
-						toil_water =  getNode("toil_water", eElement);
-						bath_water =  getNode("bath_water", eElement);
-						wash_water =  getNode("wash_water", eElement);
-						kitch_water =  getNode("kitch_water", eElement);
-						main_door =  getNode("main_door", eElement);
-						bed_wind =  getNode("bed_wind", eElement);
-						kab_wind =  getNode("kab_wind", eElement);
-						safe_wind =  getNode("safe_wind", eElement);
-						toil_light =  getNode("toil_light", eElement);
-						hall_light =  getNode("hall_light", eElement);
-						bed_light =  getNode("bed_light", eElement);
-						kitch_light =  getNode("kitch_light", eElement);
+						// Get the title
+						current = getNode("current", eElement);
+						bed_temp = getNode("bed_temp", eElement);
+						kitch_temp = getNode("kitch_temp", eElement);
+						toil_temp = getNode("toil_temp", eElement);
+						street_temp = getNode("street_temp", eElement);
+						toil_water = getNode("toil_water", eElement);
+						bath_water = getNode("bath_water", eElement);
+						wash_water = getNode("wash_water", eElement);
+						kitch_water = getNode("kitch_water", eElement);
+						main_door = getNode("main_door", eElement);
+						bed_wind = getNode("bed_wind", eElement);
+						kab_wind = getNode("kab_wind", eElement);
+						safe_wind = getNode("safe_wind", eElement);
+						toil_light = getNode("toil_light", eElement);
+						hall_light = getNode("hall_light", eElement);
+						bed_light = getNode("bed_light", eElement);
+						kitch_light = getNode("kitch_light", eElement);
 					}
 				}
-			 } catch (NullPointerException e) {
-				 Toast t = Toast.makeText(getApplicationContext(),
-                         "Ошибка связи с мозгом. Невозможно получить состояния",
-                         Toast.LENGTH_SHORT);
-                 t.show();
-			 }
-			//}
+			} catch (NullPointerException e) {
+				Toast t = Toast.makeText(getApplicationContext(),
+						"Ошибка связи с мозгом. Невозможно получить состояния",
+						Toast.LENGTH_SHORT);
+				t.show();
+			}
+			// }
 			// Close progressbar
 			// pDialog.dismiss();
 		}
 	}
 
 	public static class sendGet extends AsyncTask<String, Void, Void> {
-		
+
 		protected Void doInBackground(String... urls) {
 			try {
-				
+
 				// replace with your url
 				HttpResponse response;
 				try {

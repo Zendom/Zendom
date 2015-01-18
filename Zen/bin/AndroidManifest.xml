@@ -57,6 +57,7 @@
             android:name=".LightActivity"
             android:label="@string/title_activity_light" >
         </activity>
+        <service android:name="MainService"></service>
     </application>
 
 </manifest>
