@@ -34,11 +34,18 @@
 <fullyQualifiedTypeName name="org.w3c.dom.NodeList"/>
 <fullyQualifiedTypeName name="ua.co.zen.R.id"/>
 <fullyQualifiedTypeName name="java.lang.Override"/>
-<fullyQualifiedTypeName name="ua.co.zen.MainActivity.sendGet"/>
-<fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity.DownloadXML"/>
 <fullyQualifiedTypeName name="java.lang.RuntimeException"/>
-<fullyQualifiedTypeName name="java.lang.NullPointerException"/>
 <fullyQualifiedTypeName name="android.os.AsyncTask"/>
 <fullyQualifiedTypeName name="ua.co.zen.LightActivity.RefreshScreen"/>
+<fullyQualifiedTypeName name="ua.co.zen.LightActivity"/>
+<fullyQualifiedTypeName name="java.net.InetAddress"/>
+<fullyQualifiedTypeName name="java.net.HttpURLConnection"/>
+<fullyQualifiedTypeName name="java.net.MalformedURLException"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity.IfConnection"/>
+<fullyQualifiedTypeName name="ua.co.zen.Logic"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainActivity.sendGet"/>
+<fullyQualifiedTypeName name="ua.co.zen.servicetest.MainService.DownloadXML"/>
+<fullyQualifiedTypeName name="java.lang.NullPointerException"/>
 </qualifiedTypeNameHistroy>

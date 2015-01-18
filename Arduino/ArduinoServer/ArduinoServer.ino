@@ -67,7 +67,7 @@ void loop()
           client.println("Content-Type: text/xml");
           client.println("Connection: keep-alive");
           client.println();
-          SetLEDs();
+          SetLights();
           // send XML file containing input states
           XML_response(client);
 
@@ -97,8 +97,7 @@ void loop()
 
 // checks if received HTTP request is switching on/off LEDs
 // also saves the state of the LEDs
-void SetLEDs(void)
-{
+void SetLights (void) {
   // LED 1 (pin 6)
   if (StrContains(HTTP_req, "toil_light=1")) {
     LED_state[0] = 1;  // save LED state
@@ -201,7 +200,7 @@ void XML_response(EthernetClient cl)
     cl.print("off");
   }
   cl.println("</toil_light>");
-  // LED2
+
   cl.print("<hall_light>");
   if (LED_state[1]) {
     cl.print("on");
@@ -210,8 +209,7 @@ void XML_response(EthernetClient cl)
     cl.print("off");
   }
   cl.println("</hall_light>");
-  // button LED states
-  // LED3
+
   cl.print("<bed_light>");
   if (LED_state[2]) {
     cl.print("on");
@@ -220,7 +218,7 @@ void XML_response(EthernetClient cl)
     cl.print("off");
   }
   cl.println("</bed_light>");
-  // LED4
+  
   cl.print("<kitch_light>");
   if (LED_state[3]) {
     cl.print("on");
@@ -229,7 +227,7 @@ void XML_response(EthernetClient cl)
     cl.print("off");
   }
   cl.println("</kitch_light>");
-
+  
   cl.print("</inputs>");
 }
 

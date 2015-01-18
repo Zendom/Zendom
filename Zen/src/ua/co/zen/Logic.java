@@ -1,11 +1,15 @@
 package ua.co.zen;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -16,88 +20,38 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import ua.co.zen.MainActivity.DownloadXML;
+import ua.co.zen.MainActivity.MyTimerTask;
+import ua.co.zen.MainActivity.sendGet;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Logic {
-
-	// Declare variables
-	TextView textview;
-	NodeList nodelist;
-	ProgressDialog pDialog;
-	// Insert image URL
-	String URL = "http://192.168.1.33";
-	private Timer mTimer;
-	private MyTimerTask mMyTimerTask;
-	String name;
-	Integer param;
-	Button Button1;
-	Button Button2;
 	
-	public Logic(){
-		super();
-		mTimer = new Timer();
-		mMyTimerTask = new MyTimerTask();
-		mTimer.schedule(mMyTimerTask, 1000, 3000);
+	public static String URL = "http://192.168.1.33";
+	protected static final int RESULT_SPEECH = 1;
+	private static final String IP = "192.168.1.33";
+	InetAddress inet;
+	MainActivity ma;
+	public NodeList nodelist;
+	
+	public void main(){
+		 ma  = new MainActivity();
 	}
 	
-	public void startParser () {
-
-		// Locate a TextView in your activity_main.xml layout
-	//	textview = (TextView) findViewById(R.id.text);
-		// Execute DownloadXML AsyncTask
-		mTimer = new Timer();
-		mMyTimerTask = new MyTimerTask();
-		mTimer.schedule(mMyTimerTask, 1000, 3000);
-		/* Button1 = (Button) findViewById(R.id.button1);
-		// Ñëóøàåì ãîëîñ ïî êëèêó íà êíîïêó. Âîçâðàùàåì ðåçóëüòàò â ìàññèâ ñòðîê
-		Button1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// new Thread(new Runnable() {
-				// public void run() {
-				// Button1.post(new Runnable() {
-				// public void run() {
-				addurl = "?LED3=1";
-				new sendGet().execute(URL + addurl);
-				// }
-				// });
-				// }
-				// }).start();
-			}
-		});
-		Button2 = (Button) findViewById(R.id.button2);
-		// Ñëóøàåì ãîëîñ ïî êëèêó íà êíîïêó. Âîçâðàùàåì ðåçóëüòàò â ìàññèâ ñòðîê
-		Button2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// new Thread(new Runnable() {
-				// public void run() {
-				// Button2.post(new Runnable() {
-				// public void run() {
-				addurl = "?LED4=1";
-				new sendGet().execute(URL + addurl);
-				// }
-				// });
-				// }
-				// }).start();
-			}
-		}); */
-	}
-	
-	public void sentParam (String addurl) {
-		new sendGet().execute(URL + addurl);
-		
-	}
-
 	// DownloadXML AsyncTask
-	private class DownloadXML extends AsyncTask<String, Void, Void> {
+	public class DownloadXML extends AsyncTask<String, Void, Void> {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -133,39 +87,55 @@ public class Logic {
 
 		@Override
 		protected void onPostExecute(Void args) {
-			// if (nodelist.getLength() > 0) {
-			for (int temp = 0; temp < nodelist.getLength(); temp++) {
-				Node nNode = nodelist.item(temp);
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
-					// Set the texts into TextViews from item nodes
-					// Get the title
-					textview.setText("Analog : " + getNode("analog", eElement)
-							+ "\n" + "\n");
-					// Get the description
-					textview.setText(textview.getText() + "Switch : "
-							+ getNode("switch", eElement) + "\n" + "\n");
-					// Get the link
-					textview.setText(textview.getText() + "LED : "
-							+ getNode("LED", eElement) + "\n" + "\n");
+			//if (nodelist.getLength() > 0) {
+			try {
+				for (int temp = 0; temp < nodelist.getLength(); temp++) {
+					Node nNode = nodelist.item(temp);
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element eElement = (Element) nNode;
+						// Set the texts into TextViews from item nodes
+						// Get the title					
+						ma.current =  getNode("current", eElement);
+						ma.bed_temp =  getNode("bed_temp", eElement);
+						ma.kitch_temp =  getNode("kitch_temp", eElement);
+						ma.toil_temp =  getNode("toil_temp", eElement);
+						ma.street_temp =  getNode("street_temp", eElement);
+						ma.toil_water =  getNode("toil_water", eElement);
+						ma.bath_water =  getNode("bath_water", eElement);
+						ma.wash_water =  getNode("wash_water", eElement);
+						ma.kitch_water =  getNode("kitch_water", eElement);
+						ma.main_door =  getNode("main_door", eElement);
+						ma.bed_wind =  getNode("bed_wind", eElement);
+						ma.kab_wind =  getNode("kab_wind", eElement);
+						ma.safe_wind =  getNode("safe_wind", eElement);
+						ma.toil_light =  getNode("toil_light", eElement);
+						ma.hall_light =  getNode("hall_light", eElement);
+						ma.bed_light =  getNode("bed_light", eElement);
+						ma.kitch_light =  getNode("kitch_light", eElement);
+					}
 				}
-			}
-			// }
+			 } catch (NullPointerException e) {
+				 Toast t = Toast.makeText(ma.getApplicationContext(),
+                         "Ошибка связи с мозгом. Невозможно получить состояния",
+                         Toast.LENGTH_SHORT);
+                 t.show();
+			 }
+			//}
 			// Close progressbar
 			// pDialog.dismiss();
 		}
 	}
 
-	class sendGet extends AsyncTask<String, Void, Void> {
-		private Exception exception;
-
+	public static class sendGet extends AsyncTask<String, Void, Void> {
+		
 		protected Void doInBackground(String... urls) {
 			try {
-				HttpClient client = new DefaultHttpClient();
-				HttpGet request = new HttpGet(urls[0]);
+				
 				// replace with your url
 				HttpResponse response;
 				try {
+					HttpClient client = new DefaultHttpClient();
+					HttpGet request = new HttpGet(urls[0]);
 					response = client.execute(request);
 					Log.d("Response of GET request", response.toString());
 				} catch (ClientProtocolException e) {
@@ -176,7 +146,6 @@ public class Logic {
 					e.printStackTrace();
 				}
 			} catch (Exception e) {
-				this.exception = e;
 				return null;
 			}
 			return null;
@@ -196,10 +165,14 @@ public class Logic {
 		return nValue.getNodeValue();
 	}
 
-	class MyTimerTask extends TimerTask {
+	public class MyTimerTask extends TimerTask {
 		@Override
 		public void run() {
-					new DownloadXML().execute(URL);	
+			ma.runOnUiThread(new Runnable() {
+				public void run() {
+					new DownloadXML().execute(URL);
+				}
+			});
 		}
 	}
 

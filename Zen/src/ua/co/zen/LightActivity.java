@@ -3,8 +3,6 @@ package ua.co.zen;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ua.co.zen.MainActivity.DownloadXML;
-import ua.co.zen.MainActivity.MyTimerTask;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -24,12 +22,15 @@ public class LightActivity extends Activity {
 	String URL = "http://192.168.1.33";
 	private Timer mTimer;
 	private MyTimerTask mMyTimerTask;
+	MainActivity ma;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_light);
-
+		
+		ma =new MainActivity();
+		
 		infoButton = (Button) findViewById(R.id.infoButton);
 		Typeface tp = Typeface.createFromAsset(getAssets(), "fonts/ptsans.ttf");
 		infoButton.setTypeface(tp);
@@ -52,25 +53,25 @@ public class LightActivity extends Activity {
 		 	toil_light = intent.getStringExtra("kitch_light");
 		 */	
 		
-		if (MainActivity.toil_light.equals("on")) {
+		if (ma.toil_light.equals("on")) {
 			toiletLight.setImageResource(R.drawable.zen_light_1);
 		} else {
 			toiletLight.setImageResource(R.drawable.zen_light_black_5);
 		}
 
-		if (MainActivity.hall_light.equals("on")) {
+		if (ma.hall_light.equals("on")) {
 			hallLight.setImageResource(R.drawable.zen_light_2);
 		} else {
 			hallLight.setImageResource(R.drawable.zen_light_black_6);
 		}
 
-		if (MainActivity.bed_light.equals("on")) {
+		if (ma.bed_light.equals("on")) {
 			bedLight.setImageResource(R.drawable.zen_light_3);
 		} else {
 			bedLight.setImageResource(R.drawable.zen_light_black_7);
 		}
 
-		if (MainActivity.kitch_light.equals("on")) {
+		if (ma.kitch_light.equals("on")) {
 			kitchLight.setImageResource(R.drawable.zen_light_4);
 		} else {
 			kitchLight.setImageResource(R.drawable.zen_light_black_8);
@@ -85,16 +86,13 @@ public class LightActivity extends Activity {
 		toiletLight.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (MainActivity.toil_light.equals("on")) { // если лампа была включена
-					toiletLight.setImageResource(R.drawable.zen_light_black_5); // меняем
-																				// картинку
+				if (ma.toil_light.equals("on")) { // если лампа была включена
+					toiletLight.setImageResource(R.drawable.zen_light_black_5); // меняем картинку
 					String addurl = "?toil_light=0"; // выключаем лампу
-					new MainActivity.sendGet().execute(URL + addurl); // отправляем
-																		// запрос
+					new MainActivity.sendGet().execute(URL + addurl); // отправляем запрос
 					infoButton.setText("Свет в туалете выключен");
 					//toil_light = "off"; // меняем статус
-				} else { // проделываем обратные действия если лампа была
-							// выключена
+				} else { // проделываем обратные действия если лампа была выключена
 					toiletLight.setImageResource(R.drawable.zen_light_1);
 					String addurl = "?toil_light=1";
 					new MainActivity.sendGet().execute(URL + addurl);
@@ -108,16 +106,13 @@ public class LightActivity extends Activity {
 		hallLight.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (MainActivity.hall_light.equals("on")) { // если лампа была включена
-					hallLight.setImageResource(R.drawable.zen_light_black_6); // меняем
-																				// картинку
+				if (ma.hall_light.equals("on")) { // если лампа была включена
+					hallLight.setImageResource(R.drawable.zen_light_black_6); // меняем картинку
 					String addurl = "?hall_light=0"; // выключаем лампу
-					new MainActivity.sendGet().execute(URL + addurl); // отправляем
-																		// запрос
+					new MainActivity.sendGet().execute(URL + addurl); // отправляем запрос
 					infoButton.setText("Свет в коридоре выключен");
 					//hall_light = "off"; // меняем статус
-				} else { // проделываем обратные действия если лампа была
-							// выключена
+				} else { // проделываем обратные действия если лампа была выключена
 					hallLight.setImageResource(R.drawable.zen_light_2);
 					String addurl = "?hall_light=1";
 					new MainActivity.sendGet().execute(URL + addurl);
@@ -131,16 +126,13 @@ public class LightActivity extends Activity {
 		bedLight.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (MainActivity.bed_light.equals("on")) { // если лампа была включена
-					bedLight.setImageResource(R.drawable.zen_light_black_7); // меняем
-																				// картинку
+				if (ma.bed_light.equals("on")) { // если лампа была включена
+					bedLight.setImageResource(R.drawable.zen_light_black_7); // меняем картинку
 					String addurl = "?bed_light=0"; // выключаем лампу
-					new MainActivity.sendGet().execute(URL + addurl); // отправляем
-																		// запрос
+					new MainActivity.sendGet().execute(URL + addurl); // отправляем запрос
 					infoButton.setText("Свет в спальне выключен");
 					//bed_light = "off"; // меняем статус
-				} else { // проделываем обратные действия если лампа была
-							// выключена
+				} else { // проделываем обратные действия если лампа была выключена
 					bedLight.setImageResource(R.drawable.zen_light_3);
 					String addurl = "?bed_light=1";
 					new MainActivity.sendGet().execute(URL + addurl);
@@ -154,16 +146,13 @@ public class LightActivity extends Activity {
 				kitchLight.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (MainActivity.kitch_light.equals("on")) { // если лампа была включена
-							kitchLight.setImageResource(R.drawable.zen_light_black_8); // меняем
-																						// картинку
+						if (ma.kitch_light.equals("on")) { // если лампа была включена
+							kitchLight.setImageResource(R.drawable.zen_light_black_8); // меняем картинку
 							String addurl = "?kitch_light=0"; // выключаем лампу
-							new MainActivity.sendGet().execute(URL + addurl); // отправляем
-																				// запрос
+							new MainActivity.sendGet().execute(URL + addurl); // отправляем запрос
 							infoButton.setText("Свет на кухне выключен");
 							//kitch_light = "off"; // меняем статус
-						} else { // проделываем обратные действия если лампа была
-									// выключена
+						} else { // проделываем обратные действия если лампа была выключена
 							kitchLight.setImageResource(R.drawable.zen_light_4);
 							String addurl = "?kitch_light=1";
 							new MainActivity.sendGet().execute(URL + addurl);
@@ -184,25 +173,25 @@ public class LightActivity extends Activity {
 					//new RefreshScreen().execute();
 					//LightActivity.this.recreate();
 					
-					if (MainActivity.toil_light.equals("on")) {
+					if (ma.toil_light.equals("on")) {
 						toiletLight.setImageResource(R.drawable.zen_light_1);
 					} else {
 						toiletLight.setImageResource(R.drawable.zen_light_black_5);
 					}
 
-					if (MainActivity.hall_light.equals("on")) {
+					if (ma.hall_light.equals("on")) {
 						hallLight.setImageResource(R.drawable.zen_light_2);
 					} else {
 						hallLight.setImageResource(R.drawable.zen_light_black_6);
 					}
 
-					if (MainActivity.bed_light.equals("on")) {
+					if (ma.bed_light.equals("on")) {
 						bedLight.setImageResource(R.drawable.zen_light_3);
 					} else {
 						bedLight.setImageResource(R.drawable.zen_light_black_7);
 					}
 
-					if (MainActivity.kitch_light.equals("on")) {
+					if (ma.kitch_light.equals("on")) {
 						kitchLight.setImageResource(R.drawable.zen_light_4);
 					} else {
 						kitchLight.setImageResource(R.drawable.zen_light_black_8);
@@ -212,7 +201,7 @@ public class LightActivity extends Activity {
 			});
 		}
 	}
-	
+	/*
 	class RefreshScreen extends AsyncTask<Void, Void, Void> {
 
 	    @Override
@@ -223,11 +212,11 @@ public class LightActivity extends Activity {
 
 	    @Override
 	    protected Void doInBackground(Void... params) {
-	    	toil_light = MainActivity.toil_light;// Берем переменную из MainActivity
-	    	hall_light = MainActivity.hall_light;// Берем переменную из MainActivity
-	    	bed_light = MainActivity.bed_light;// Берем переменную из MainActivity
-	    	kitch_light = MainActivity.kitch_light;// Берем переменную из
-			// MainActivity
+	    	toil_light = ma.toil_light;// Берем переменную из ma
+	    	hall_light = ma.hall_light;// Берем переменную из ma
+	    	bed_light = ma.bed_light;// Берем переменную из ma
+	    	kitch_light = ma.kitch_light;// Берем переменную из
+			// ma
 	      return null;
 	    }
 
@@ -260,7 +249,7 @@ public class LightActivity extends Activity {
 			}
 	    }
 	  }
-
+*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
