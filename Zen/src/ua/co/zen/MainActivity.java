@@ -20,6 +20,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import ua.co.zen.MainService.DownloadXML;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -77,6 +79,8 @@ public class MainActivity extends Activity {
 	TextView tvInterval;
 	long interval;
 	boolean service_flag = true;
+	
+	DownloadXML downxml = new DownloadXML();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -407,72 +411,63 @@ public class MainActivity extends Activity {
 
 	}
 
-	// DownloadXML AsyncTask
-	public class DownloadXML extends AsyncTask<String, Void, Void> {
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-
-		@Override
-		protected Void doInBackground(String... Url) {
-			try {
-				URL url = new URL(Url[0]);
-				DocumentBuilderFactory dbf = DocumentBuilderFactory
-						.newInstance();
-				DocumentBuilder db = dbf.newDocumentBuilder();
-				// Download the XML file
-				Document doc = db.parse(new InputSource(url.openStream()));
-				doc.getDocumentElement().normalize();
-				// Locate the Tag Name
-				nodelist = doc.getElementsByTagName("inputs");
-			} catch (Exception e) {
-				Log.e("Error", e.getMessage());
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void args) {
-			// if (nodelist.getLength() > 0) {
-			try {
-				for (int temp = 0; temp < nodelist.getLength(); temp++) {
-					Node nNode = nodelist.item(temp);
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-						// Set the texts into TextViews from item nodes
-						// Get the title
-						current = getNode("current", eElement);
-						bed_temp = getNode("bed_temp", eElement);
-						kitch_temp = getNode("kitch_temp", eElement);
-						toil_temp = getNode("toil_temp", eElement);
-						street_temp = getNode("street_temp", eElement);
-						toil_water = getNode("toil_water", eElement);
-						bath_water = getNode("bath_water", eElement);
-						wash_water = getNode("wash_water", eElement);
-						kitch_water = getNode("kitch_water", eElement);
-						main_door = getNode("main_door", eElement);
-						bed_wind = getNode("bed_wind", eElement);
-						kab_wind = getNode("kab_wind", eElement);
-						safe_wind = getNode("safe_wind", eElement);
-						toil_light = getNode("toil_light", eElement);
-						hall_light = getNode("hall_light", eElement);
-						bed_light = getNode("bed_light", eElement);
-						kitch_light = getNode("kitch_light", eElement);
-					}
+	// DownloadXML
+		public class DownloadXML {
+			protected Void loadXML() {
+				try {
+					URL url = new URL(URL);
+					DocumentBuilderFactory dbf = DocumentBuilderFactory
+							.newInstance();
+					DocumentBuilder db = dbf.newDocumentBuilder();
+					// Download the XML file
+					Document doc = db.parse(new InputSource(url.openStream()));
+					doc.getDocumentElement().normalize();
+					// Locate the Tag Name
+					NodeList nodelist = doc.getElementsByTagName("inputs");
+					getTag(nodelist);
+				} catch (Exception e) {
+					Log.e("Error", e.getMessage());
+					e.printStackTrace();
 				}
-			} catch (NullPointerException e) {
-				Toast t = Toast.makeText(getApplicationContext(),
-						"Ошибка связи с мозгом. Невозможно получить состояния",
-						Toast.LENGTH_SHORT);
-				t.show();
+				return null;
 			}
-			// }
-			// Close progressbar
-			// pDialog.dismiss();
+
+			protected void getTag(NodeList nodelist) {
+				// if (nodelist.getLength() > 0) {
+				try {
+					for (int temp = 0; temp < nodelist.getLength(); temp++) {
+						Node nNode = nodelist.item(temp);
+						if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+							Element eElement = (Element) nNode;
+							// Set the texts into TextViews from item nodes
+							// Get the title
+							current = getNode("current", eElement);
+							bed_temp = getNode("bed_temp", eElement);
+							kitch_temp = getNode("kitch_temp", eElement);
+							toil_temp = getNode("toil_temp", eElement);
+							street_temp = getNode("street_temp", eElement);
+							toil_water = getNode("toil_water", eElement);
+							bath_water = getNode("bath_water", eElement);
+							wash_water = getNode("wash_water", eElement);
+							kitch_water = getNode("kitch_water", eElement);
+							main_door = getNode("main_door", eElement);
+							bed_wind = getNode("bed_wind", eElement);
+							kab_wind = getNode("kab_wind", eElement);
+							safe_wind = getNode("safe_wind", eElement);
+							toil_light = getNode("toil_light", eElement);
+							hall_light = getNode("hall_light", eElement);
+							bed_light = getNode("bed_light", eElement);
+							kitch_light = getNode("kitch_light", eElement);
+						}
+					}
+				} catch (NullPointerException e) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Ошибка связи с мозгом. Невозможно получить состояния",
+							Toast.LENGTH_SHORT);
+					t.show();
+				}
+			}
 		}
-	}
 
 	public static class sendGet extends AsyncTask<String, Void, Void> {
 
@@ -518,7 +513,12 @@ public class MainActivity extends Activity {
 		public void run() {
 			runOnUiThread(new Runnable() {
 				public void run() {
-					new DownloadXML().execute(URL);
+					Thread myThread = new Thread(new Runnable() {
+						public void run() {
+							downxml.loadXML();
+						}
+					});
+					myThread.start();
 				}
 			});
 		}

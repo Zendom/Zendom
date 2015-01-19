@@ -50,4 +50,5 @@
 <fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="ua.co.zen.servicetest.SecondActivity"/>
 <fullyQualifiedTypeName name="ua.co.zen.MainActivity"/>
+<fullyQualifiedTypeName name="ua.co.zen.MainService.DownloadXML"/>
 </qualifiedTypeNameHistroy>
