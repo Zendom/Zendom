@@ -2,17 +2,28 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <SD.h>
-#include <DS1302.h>
 #include <stdio.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <IRremote.h>
 
 // size of buffer used to capture HTTP requests
 #define REQ_BUF_SZ   60
+#define ONE_WIRE_BUS 34  
+#define GERKON_PIN 36
 
-const int port_h1 = 2; //снимаем состояние датчик холла
-const int port_h2 = 3; //питание датчика холла
-uint8_t state = 0; //состояние датчика
+//температура
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+float tempSensor1 = 1.0;
+float tempSensor2 = 1.0;
+int temp1 = 1;
+int temp2 = 2;
 
-char buf[50]; //буфер времени
+int val = 0; //статус геркона цифрами
+String gerkonstatus = "temp"; //статус геркона буквами
+
+IRsend irsend; //pin 3 
 
 // MAC address from Ethernet shield sticker under board
 byte mac[] = {
@@ -20,31 +31,10 @@ byte mac[] = {
 };
 IPAddress ip(192, 168, 1, 33); // IP address, may need to change depending on network
 EthernetServer server(80);  // create a server at port 80
-char HTTP_req[REQ_BUF_SZ] = {
-  0
-}; // buffered HTTP request stored as null terminated string
+char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
 char req_index = 0;              // index into HTTP_req buffer
-boolean LED_state[4] = {
-  0
-}; // stores the states of the LEDs
-
-//Real time clock
-namespace {
-  const int kCePin   = 5;  // Chip Enable
-  const int kIoPin   = 6;  // Input/Output
-  const int kSclkPin = 7;  // Serial Clock
-// Create a DS1302 object.
-DS1302 rtc(kCePin, kIoPin, kSclkPin);
-
-void printTime() {
-  // Get the current time and date from the chip.
-  Time t = rtc.time();
-  // Format the time and date and insert into the temporary buffer.
-  
-  snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d", t.yr, t.mon, t.date,
-           t.hr, t.min, t.sec);
- }
-}  // namespace of real time clock
+boolean LED_state[4] = {0}; // stores the states of the LEDs
+// namespace of real time clock
 
 void setup()
 {
@@ -57,16 +47,11 @@ void setup()
   pinMode(15, OUTPUT);
   pinMode(16, OUTPUT);
   pinMode(17, OUTPUT);
-  
-  //Holle sensor door
-  pinMode(port_h1, INPUT);
-  pinMode(port_h2, OUTPUT);
-  
-  //Real time Clock
-  rtc.writeProtect(false);
-  rtc.halt(false);
-
+ 
   Serial.begin(9600);       // for debugging
+  
+  sensors.begin(); //включаем темп. сенсоры
+  sensors.setResolution(10);
 
   Ethernet.begin(mac, ip);  // initialize Ethernet device
   server.begin();           // start to listen for clients
@@ -103,8 +88,9 @@ void loop()
           client.println();
           //место собственных функций
           SetLights();
-          //GetHolleSensor();
-          
+          sensorTempRead();  //Опрос датчика температуры
+          getGerkon(); //состояние геркона
+          setTV(); //отправляем команды на IR led
           // send XML file containing input states
           XML_response(client);
           // display received HTTP request on serial port
@@ -131,12 +117,25 @@ void loop()
   } // end if (client)
 }
 
-void GetHolleSensor (void) {
-  digitalWrite (port_h2, HIGH); //включаем питание
-  state = digitalRead(port_h1); //опрашиваем датчик
-  digitalWrite (port_h2, LOW);//сбрасываем значение датчика в 0
-  if (state == 1) {
-    printTime();
+
+// Опрос датчиков температуры
+void sensorTempRead()
+{   
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  tempSensor1 = sensors.getTempCByIndex(0);
+  tempSensor2 = sensors.getTempCByIndex(1);
+  
+  temp1 = (int) tempSensor1;
+  temp2 = (int) tempSensor2;
+  
+}
+
+void getGerkon(){
+   val = digitalRead(GERKON_PIN);//читаем состояние геркона
+     if (val == 1) { // Если Door_Sensor N.C. (без магнита) -> HIGH : Дверь открыта / LOW : Дверь закрыта
+    gerkonstatus = "off";
+  } else {
+    gerkonstatus = "on";
   }
 }
 
@@ -181,6 +180,30 @@ void SetLights (void) {
   }
 }
 
+void setTV(void) {
+    if (StrContains(HTTP_req, "soundmulti")) {
+    irsend.sendSAMSUNG(0xE0E0F00F, 32); //Mute
+  }
+    if (StrContains(HTTP_req, "volupmulti")) {
+     irsend.sendSAMSUNG(0xE0E0E01F, 32); //Vol.Up
+  }
+    if (StrContains(HTTP_req, "voldownmulti")) {
+    irsend.sendSAMSUNG(0xE0E0D02F, 32); //Vol.Down
+  }
+    if (StrContains(HTTP_req, "onmulti")) {
+    irsend.sendSAMSUNG(0xE0E0807F, 32); //Source
+  }
+    if (StrContains(HTTP_req, "backmulti")) {
+     irsend.sendSAMSUNG(0xE0E008F7, 32); //Ch.Back
+  }
+    if (StrContains(HTTP_req, "forwmulti")) {
+    irsend.sendSAMSUNG(0xE0E048B7, 32); //Ch.Next
+  }
+    if (StrContains(HTTP_req, "playmulti")) {
+    irsend.sendSAMSUNG(0xE0E040BF, 32); //On.Off
+  }
+}
+
 // send the XML file with analog values, switch status
 //  and LED status
 void XML_response(EthernetClient cl)
@@ -199,7 +222,7 @@ void XML_response(EthernetClient cl)
   cl.println("</current>");
   //температура
   cl.print("<bed_temp>");
-  cl.print("25");
+  cl.print(temp1);
   cl.println("</bed_temp>");
   cl.print("<kitch_temp>");
   cl.print("22");
@@ -208,7 +231,7 @@ void XML_response(EthernetClient cl)
   cl.print("26");
   cl.println("</toil_temp>");
   cl.print("<street_temp>");
-  cl.print("-10");
+  cl.print(temp2);
   cl.println("</street_temp>");
   //протечки
   cl.print("<toil_water>");
@@ -225,7 +248,7 @@ void XML_response(EthernetClient cl)
   cl.println("</kitch_water>");
   //Двери
   cl.print("<main_door>");
-  cl.print(buf); // читаем время из буфера 
+  cl.print(gerkonstatus); // читаем время из буфера 
   cl.println("</main_door>");
   cl.print("<bed_wind>");
   cl.print("off");
