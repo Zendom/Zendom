@@ -18,8 +18,8 @@ public final class R {
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f050000;
+        public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
@@ -84,63 +84,63 @@ public final class R {
         public static final int zen_water_red_8=0x7f02003b;
     }
     public static final class id {
-        public static final int Kostil=0x7f080011;
-        public static final int action_settings=0x7f080038;
-        public static final int backMulti=0x7f080026;
-        public static final int bathroomWater=0x7f080035;
-        public static final int bedroomImage=0x7f08002c;
-        public static final int bedroomLight=0x7f080014;
-        public static final int bedroomTemp=0x7f080030;
-        public static final int button1=0x7f080003;
-        public static final int cameraButton=0x7f08001b;
-        public static final int conditionButton=0x7f080017;
-        public static final int currentElectirc=0x7f08000c;
-        public static final int currentText=0x7f08000e;
-        public static final int doorButton=0x7f080020;
-        public static final int electricButton=0x7f08001a;
-        public static final int enterDoor=0x7f080007;
-        public static final int forwMulti=0x7f080028;
-        public static final int gridLayout1=0x7f080016;
-        public static final int hallLight=0x7f080013;
-        public static final int headerButton=0x7f080001;
-        public static final int imageView1=0x7f080005;
-        public static final int imageView2=0x7f080006;
-        public static final int infoButton=0x7f080002;
-        public static final int kitchenImage=0x7f08002d;
-        public static final int kitchenLight=0x7f080015;
-        public static final int kitchenTemp=0x7f080031;
-        public static final int kladowDoor=0x7f08000a;
-        public static final int lightButton=0x7f080022;
-        public static final int moikaWater=0x7f080037;
-        public static final int multiButton=0x7f080021;
-        public static final int onMulti=0x7f080025;
-        public static final int pauseMulti=0x7f08002b;
-        public static final int playMulti=0x7f080027;
-        public static final int powerElectric=0x7f08000b;
-        public static final int powerText=0x7f080010;
-        public static final int scenaButton=0x7f080018;
-        public static final int securityButton=0x7f08001d;
-        public static final int socketButton=0x7f080019;
-        public static final int soundMulti=0x7f080023;
-        public static final int stopMulti=0x7f080029;
-        public static final int streetImage=0x7f08002f;
-        public static final int streetTemp=0x7f080033;
-        public static final int tempButton=0x7f08001c;
-        public static final int tempLayout=0x7f080000;
-        public static final int toiletImage=0x7f08002e;
-        public static final int toiletLight=0x7f080012;
-        public static final int toiletTemp=0x7f080032;
-        public static final int toiletWater=0x7f080034;
-        public static final int umivWater=0x7f080036;
-        public static final int upCam=0x7f080004;
-        public static final int voiceButton=0x7f08001e;
-        public static final int voldownMulti=0x7f08002a;
-        public static final int voltElectric=0x7f08000d;
-        public static final int voltText=0x7f08000f;
-        public static final int volupMulti=0x7f080024;
-        public static final int waterButton=0x7f08001f;
-        public static final int windkabDoor=0x7f080009;
-        public static final int windsleepDoor=0x7f080008;
+        public static final int Kostil=0x7f090011;
+        public static final int action_settings=0x7f090038;
+        public static final int backMulti=0x7f090026;
+        public static final int bathroomWater=0x7f090035;
+        public static final int bedroomImage=0x7f09002c;
+        public static final int bedroomLight=0x7f090014;
+        public static final int bedroomTemp=0x7f090030;
+        public static final int button1=0x7f090003;
+        public static final int cameraButton=0x7f09001b;
+        public static final int conditionButton=0x7f090017;
+        public static final int currentElectirc=0x7f09000c;
+        public static final int currentText=0x7f09000e;
+        public static final int doorButton=0x7f090020;
+        public static final int electricButton=0x7f09001a;
+        public static final int enterDoor=0x7f090007;
+        public static final int forwMulti=0x7f090028;
+        public static final int gridLayout1=0x7f090016;
+        public static final int hallLight=0x7f090013;
+        public static final int headerButton=0x7f090001;
+        public static final int imageView1=0x7f090005;
+        public static final int imageView2=0x7f090006;
+        public static final int infoButton=0x7f090002;
+        public static final int kitchenImage=0x7f09002d;
+        public static final int kitchenLight=0x7f090015;
+        public static final int kitchenTemp=0x7f090031;
+        public static final int kladowDoor=0x7f09000a;
+        public static final int lightButton=0x7f090022;
+        public static final int moikaWater=0x7f090037;
+        public static final int multiButton=0x7f090021;
+        public static final int onMulti=0x7f090025;
+        public static final int pauseMulti=0x7f09002b;
+        public static final int playMulti=0x7f090027;
+        public static final int powerElectric=0x7f09000b;
+        public static final int powerText=0x7f090010;
+        public static final int scenaButton=0x7f090018;
+        public static final int securityButton=0x7f09001d;
+        public static final int socketButton=0x7f090019;
+        public static final int soundMulti=0x7f090023;
+        public static final int stopMulti=0x7f090029;
+        public static final int streetImage=0x7f09002f;
+        public static final int streetTemp=0x7f090033;
+        public static final int tempButton=0x7f09001c;
+        public static final int tempLayout=0x7f090000;
+        public static final int toiletImage=0x7f09002e;
+        public static final int toiletLight=0x7f090012;
+        public static final int toiletTemp=0x7f090032;
+        public static final int toiletWater=0x7f090034;
+        public static final int umivWater=0x7f090036;
+        public static final int upCam=0x7f090004;
+        public static final int voiceButton=0x7f09001e;
+        public static final int voldownMulti=0x7f09002a;
+        public static final int voltElectric=0x7f09000d;
+        public static final int voltText=0x7f09000f;
+        public static final int volupMulti=0x7f090024;
+        public static final int waterButton=0x7f09001f;
+        public static final int windkabDoor=0x7f090009;
+        public static final int windsleepDoor=0x7f090008;
     }
     public static final class layout {
         public static final int activity_camera=0x7f030000;
@@ -149,31 +149,34 @@ public final class R {
         public static final int activity_light=0x7f030003;
         public static final int activity_main=0x7f030004;
         public static final int activity_multimedia=0x7f030005;
-        public static final int activity_temperature=0x7f030006;
-        public static final int activity_water=0x7f030007;
+        public static final int activity_pref=0x7f030006;
+        public static final int activity_temperature=0x7f030007;
+        public static final int activity_water=0x7f030008;
     }
     public static final class menu {
-        public static final int camera=0x7f070000;
-        public static final int door=0x7f070001;
-        public static final int electric=0x7f070002;
-        public static final int light=0x7f070003;
-        public static final int main=0x7f070004;
-        public static final int multimedia=0x7f070005;
-        public static final int temperature=0x7f070006;
-        public static final int water=0x7f070007;
+        public static final int camera=0x7f080000;
+        public static final int door=0x7f080001;
+        public static final int electric=0x7f080002;
+        public static final int light=0x7f080003;
+        public static final int main=0x7f080004;
+        public static final int multimedia=0x7f080005;
+        public static final int pref=0x7f080006;
+        public static final int temperature=0x7f080007;
+        public static final int water=0x7f080008;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int digit_keyboard_font=0x7f050002;
-        public static final int hello_world=0x7f050005;
-        public static final int title_activity_camera=0x7f050008;
-        public static final int title_activity_door=0x7f050009;
-        public static final int title_activity_electric=0x7f050006;
-        public static final int title_activity_light=0x7f05000a;
-        public static final int title_activity_multimedia=0x7f050007;
-        public static final int title_activity_temperature=0x7f050003;
-        public static final int title_activity_water=0x7f050004;
+        public static final int action_settings=0x7f060001;
+        public static final int app_name=0x7f060000;
+        public static final int digit_keyboard_font=0x7f060002;
+        public static final int hello_world=0x7f06000b;
+        public static final int title_activity_camera=0x7f060007;
+        public static final int title_activity_door=0x7f060008;
+        public static final int title_activity_electric=0x7f060005;
+        public static final int title_activity_light=0x7f060009;
+        public static final int title_activity_multimedia=0x7f060006;
+        public static final int title_activity_pref=0x7f06000a;
+        public static final int title_activity_temperature=0x7f060003;
+        public static final int title_activity_water=0x7f060004;
     }
     public static final class style {
         /** 
@@ -197,10 +200,13 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
+    }
+    public static final class xml {
+        public static final int pref=0x7f040000;
     }
 }

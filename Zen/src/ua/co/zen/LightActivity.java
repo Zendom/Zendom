@@ -5,9 +5,11 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,17 +21,21 @@ public class LightActivity extends Activity {
 	private ImageButton toiletLight, hallLight, bedLight, kitchLight;
 	private Button infoButton;
 	public String toil_light="", hall_light="", bed_light="", kitch_light="";
-	String URL = "http://192.168.1.33";
+	String URL;
 	private Timer mTimer;
 	private MyTimerTask mMyTimerTask;
 	MainActivity ma;
-
+	SharedPreferences sp;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_light);
 		
-		ma =new MainActivity();
+		ma = new MainActivity();
+		
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		URL = sp.getString("ip", "");
 		
 		infoButton = (Button) findViewById(R.id.infoButton);
 		Typeface tp = Typeface.createFromAsset(getAssets(), "fonts/ptsans.ttf");

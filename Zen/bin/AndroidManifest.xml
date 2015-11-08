@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="18"
         android:targetSdkVersion="18" />
-    
+
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
 
@@ -57,7 +57,14 @@
             android:name=".LightActivity"
             android:label="@string/title_activity_light" >
         </activity>
-        <service android:name="MainService"></service>
+
+        <service android:name=".MainService" >
+        </service>
+
+        <activity
+            android:name=".PrefActivity"
+            android:label="@string/title_activity_pref" >
+        </activity>
     </application>
 
 </manifest>

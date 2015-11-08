@@ -27,10 +27,12 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.Menu;
@@ -42,9 +44,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	public static String URL = "http://192.168.1.33";
+	public String URL;
 	protected static final int RESULT_SPEECH = 1;
-	private static final String IP = "192.168.1.33";
+	//private static final String IP = "192.168.1.33";
 	private ImageButton headerButton; // Красная кнопка
 	private Button infoButton; // Белая кнопка - строка информации
 	private ImageButton voiceButton; // Кнопка управления голосом
@@ -61,7 +63,7 @@ public class MainActivity extends Activity {
 	private Timer mTimer;
 	private MyTimerTask mMyTimerTask;
 	public NodeList nodelist;
-	public static String LED = "Умный дом", current = "null",
+	public static String LED = "Умный дом", current = "0",
 			bed_temp = "null", kitch_temp = "null", toil_temp = "null",
 			street_temp = "null";
 	public static String toil_water = "null", bath_water = "null",
@@ -81,6 +83,9 @@ public class MainActivity extends Activity {
 	boolean service_flag = true;
 	
 	DownloadXML downxml = new DownloadXML();
+	
+	SharedPreferences sp;
+	Boolean on;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +106,19 @@ public class MainActivity extends Activity {
 		Typeface tp = Typeface.createFromAsset(getAssets(), "fonts/ptsans.ttf");
 		infoButton.setTypeface(tp);
 
+		 sp = PreferenceManager.getDefaultSharedPreferences(this);
+		 
+		 on = sp.getBoolean("on", false);
+		 URL = sp.getString("ip", "");
+		   
+		   
+		/* Для работы сервиса, пока не нужно
 		headerButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				/* ****************** */
+				
                 if (service_flag) {
                 	startService(intent);
                 	service_flag = false;
@@ -116,10 +128,11 @@ public class MainActivity extends Activity {
     				service_flag = true;
                 }  
 
-				/* ****************** */
+				
 
 			}
 		});
+		*/
 
 		// Слушаем голос по клику на кнопку. Возвращаем результат в массив строк
 		voiceButton.setOnClickListener(new View.OnClickListener() {
@@ -195,10 +208,6 @@ public class MainActivity extends Activity {
 				Intent intent = new Intent(MainActivity.this,
 						ElectricActivity.class);
 				intent.putExtra("current", current);
-				// intent.putExtra("kitchenTemp", kitchenTemp);
-				// intent.putExtra("toiletTemp", toiletTemp);
-				// intent.putExtra("streetTemp", streetTemp);
-
 				try {
 					startActivity(intent);
 
@@ -216,11 +225,6 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this,
 						MultimediaActivity.class);
-				// intent.putExtra("bedroomTemp", bedroomTemp);
-				// intent.putExtra("kitchenTemp", kitchenTemp);
-				// intent.putExtra("toiletTemp", toiletTemp);
-				// intent.putExtra("streetTemp", streetTemp);
-
 				try {
 					startActivity(intent);
 
@@ -238,11 +242,6 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this,
 						CameraActivity.class);
-				// intent.putExtra("bedroomTemp", bedroomTemp);
-				// intent.putExtra("kitchenTemp", kitchenTemp);
-				// intent.putExtra("toiletTemp", toiletTemp);
-				// intent.putExtra("streetTemp", streetTemp);
-
 				try {
 					startActivity(intent);
 
@@ -270,7 +269,7 @@ public class MainActivity extends Activity {
 
 				} catch (ActivityNotFoundException a) {
 					Toast t = Toast.makeText(getApplicationContext(),
-							"Ошибка с CameraActivity", Toast.LENGTH_SHORT);
+							"Ошибка с DoorActivity", Toast.LENGTH_SHORT);
 					t.show();
 				}
 			}
@@ -282,11 +281,6 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this,
 						LightActivity.class);
-
-				// intent.putExtra("MainActivity", this);
-				// intent.putExtra("bed_light", bed_light);
-				// intent.putExtra("kitch_light", kitch_light);
-
 				try {
 					startActivity(intent);
 
@@ -298,10 +292,12 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		mTimer = new Timer();
-		mMyTimerTask = new MyTimerTask();
-		mTimer.schedule(mMyTimerTask, 10, 2000);
-        
+		if (on) {
+				mTimer = new Timer();
+				mMyTimerTask = new MyTimerTask();
+				mTimer.schedule(mMyTimerTask, 10, 2000);
+		} 
+		/*
         //неведомая хрень для работы сервиса
 		intent = new Intent(this, MainService.class);
 		sConn = new ServiceConnection() {
@@ -315,11 +311,12 @@ public class MainActivity extends Activity {
 			public void onServiceDisconnected(ComponentName name) {
 				Log.d(LOG_TAG, "MainActivity onServiceDisconnected");
 				bound = false;
-			}
-		};
+			}	
+		};*/
 	}
-
 	
+	
+	/* Для сервиса, пока не нужно 
 	//для запуска Service
 	@Override
 	protected void onStart() {
@@ -336,12 +333,13 @@ public class MainActivity extends Activity {
 		unbindService(sConn);
 		bound = false;
 	}
-
+	 	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	    MenuItem mi = menu.add(0, 1, 0, "Настройки");
+	    mi.setIntent(new Intent(this, PrefActivity.class));
+	    return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
