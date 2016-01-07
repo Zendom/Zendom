@@ -1,4 +1,3 @@
-
 #include <SPI.h>
 #include <Ethernet.h>
 #include <SD.h>
@@ -6,10 +5,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <IRremote.h>
+#include <EEPROM.h>
 
 // size of buffer used to capture HTTP requests
 #define REQ_BUF_SZ   60
-#define ONE_WIRE_BUS 34  
+#define ONE_WIRE_BUS 34
 #define GERKON_PIN 36
 
 //температура
@@ -23,7 +23,7 @@ int temp2 = 2;
 int val = 0; //статус геркона цифрами
 String gerkonstatus = "temp"; //статус геркона буквами
 
-IRsend irsend; //pin 3 
+IRsend irsend; //pin 3
 
 // MAC address from Ethernet shield sticker under board
 byte mac[] = {
@@ -47,18 +47,22 @@ void setup()
   pinMode(15, OUTPUT);
   pinMode(16, OUTPUT);
   pinMode(17, OUTPUT);
- 
+
   Serial.begin(9600);       // for debugging
-  
+
   sensors.begin(); //включаем темп. сенсоры
   sensors.setResolution(10);
 
+  setupLightFromEEPROM(); //устанавливаем значение света из состояния до перезагрузки
+
   Ethernet.begin(mac, ip);  // initialize Ethernet device
   server.begin();           // start to listen for clients
+
 }
 
 void loop()
 {
+  
   EthernetClient client = server.available();  // try to get client
 
   if (client) {  // got client?
@@ -118,21 +122,31 @@ void loop()
 }
 
 
+void setupLightFromEEPROM() {
+  for (int i = 0; i < 4; i++) {
+    int counter = EEPROM.read(i);
+    if (counter == 1) {
+      digitalWrite(14 + i, HIGH); //14,15,16,17 - пины световых реле
+    } else {
+      digitalWrite(14 + i, LOW);
+    }
+  }
+}
+
 // Опрос датчиков температуры
-void sensorTempRead()
-{   
+void sensorTempRead() {
   sensors.requestTemperatures(); // Send the command to get temperatures
   tempSensor1 = sensors.getTempCByIndex(0);
   tempSensor2 = sensors.getTempCByIndex(1);
-  
+
   temp1 = (int) tempSensor1;
   temp2 = (int) tempSensor2;
-  
+
 }
 
-void getGerkon(){
-   val = digitalRead(GERKON_PIN);//читаем состояние геркона
-     if (val == 1) { // Если Door_Sensor N.C. (без магнита) -> HIGH : Дверь открыта / LOW : Дверь закрыта
+void getGerkon() {
+  val = digitalRead(GERKON_PIN);//читаем состояние геркона
+  if (val == 1) { // Если Door_Sensor N.C. (без магнита) -> HIGH : Дверь открыта / LOW : Дверь закрыта
     gerkonstatus = "off";
   } else {
     gerkonstatus = "on";
@@ -146,60 +160,68 @@ void SetLights (void) {
   if (StrContains(HTTP_req, "toil_light=1")) {
     LED_state[0] = 1;  // save LED state
     digitalWrite(14, HIGH);
+    EEPROM.write(0, 1); //пишем в 0 регистр 1
   }
   else if (StrContains(HTTP_req, "toil_light=0")) {
     LED_state[0] = 0;  // save LED state
     digitalWrite(14, LOW);
+    EEPROM.write(0, 0); //пишем в 0 регистр 0
   }
   // LED 2 (pin 7)
   if (StrContains(HTTP_req, "hall_light=1")) {
     LED_state[1] = 1;  // save LED state
     digitalWrite(15, HIGH);
+    EEPROM.write(1, 1); //пишем в 1 регистр 1
   }
   else if (StrContains(HTTP_req, "hall_light=0")) {
     LED_state[1] = 0;  // save LED state
     digitalWrite(15, LOW);
+    EEPROM.write(1, 0); //пишем в 1 регистр 0
   }
   // LED 3 (pin 8)
   if (StrContains(HTTP_req, "bed_light=1")) {
     LED_state[2] = 1;  // save LED state
     digitalWrite(16, HIGH);
+    EEPROM.write(2, 1); //пишем в 2 регистр 1
   }
   else if (StrContains(HTTP_req, "bed_light=0")) {
     LED_state[2] = 0;  // save LED state
     digitalWrite(16, LOW);
+    EEPROM.write(2, 0); //пишем в 2 регистр 0
   }
   // LED 4 (pin 9)
   if (StrContains(HTTP_req, "kitch_light=1")) {
     LED_state[3] = 1;  // save LED state
     digitalWrite(17, HIGH);
+    EEPROM.write(3, 1); //пишем в 3 регистр 1
   }
   else if (StrContains(HTTP_req, "kitch_light=0")) {
     LED_state[3] = 0;  // save LED state
     digitalWrite(17, LOW);
+    EEPROM.write(3, 0); //пишем в 3 регистр 0
   }
 }
 
 void setTV(void) {
-    if (StrContains(HTTP_req, "soundmulti")) {
+  if (StrContains(HTTP_req, "soundmulti")) {
     irsend.sendSAMSUNG(0xE0E0F00F, 32); //Mute
   }
-    if (StrContains(HTTP_req, "volupmulti")) {
-     irsend.sendSAMSUNG(0xE0E0E01F, 32); //Vol.Up
+  if (StrContains(HTTP_req, "volupmulti")) {
+    irsend.sendSAMSUNG(0xE0E0E01F, 32); //Vol.Up
   }
-    if (StrContains(HTTP_req, "voldownmulti")) {
+  if (StrContains(HTTP_req, "voldownmulti")) {
     irsend.sendSAMSUNG(0xE0E0D02F, 32); //Vol.Down
   }
-    if (StrContains(HTTP_req, "onmulti")) {
+  if (StrContains(HTTP_req, "onmulti")) {
     irsend.sendSAMSUNG(0xE0E0807F, 32); //Source
   }
-    if (StrContains(HTTP_req, "backmulti")) {
-     irsend.sendSAMSUNG(0xE0E008F7, 32); //Ch.Back
+  if (StrContains(HTTP_req, "backmulti")) {
+    irsend.sendSAMSUNG(0xE0E008F7, 32); //Ch.Back
   }
-    if (StrContains(HTTP_req, "forwmulti")) {
+  if (StrContains(HTTP_req, "forwmulti")) {
     irsend.sendSAMSUNG(0xE0E048B7, 32); //Ch.Next
   }
-    if (StrContains(HTTP_req, "playmulti")) {
+  if (StrContains(HTTP_req, "playmulti")) {
     irsend.sendSAMSUNG(0xE0E040BF, 32); //On.Off
   }
 }
@@ -248,7 +270,7 @@ void XML_response(EthernetClient cl)
   cl.println("</kitch_water>");
   //Двери
   cl.print("<main_door>");
-  cl.print(gerkonstatus); // читаем время из буфера 
+  cl.print(gerkonstatus); // читаем время из буфера
   cl.println("</main_door>");
   cl.print("<bed_wind>");
   cl.print("off");
