@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
 	private ImageButton doorButton; // Кнопка экрана дверей и окон
 	private ImageButton lightButton; // Кнопка экрана дверей и окон
 	private ArrayList<String> textVoice; // Массив распознаных Google'ом фраз
+	
 	InetAddress inet;
 
 	private Timer mTimer;

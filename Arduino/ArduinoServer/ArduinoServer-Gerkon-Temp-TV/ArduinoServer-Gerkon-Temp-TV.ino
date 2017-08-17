@@ -1,11 +1,11 @@
 #include <SPI.h>
 #include <Ethernet.h>
-#include <SD.h>
 #include <stdio.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <IRremote.h>
 #include <EEPROM.h>
+//#include <avr/wdt.h>
 
 // size of buffer used to capture HTTP requests
 #define REQ_BUF_SZ   60
@@ -58,13 +58,14 @@ void setup()
   Ethernet.begin(mac, ip);  // initialize Ethernet device
   server.begin();           // start to listen for clients
 
+  // wdt_enable (WDTO_8S); // Для тестов не рекомендуется устанавливать значение менее 8 сек.
 }
 
 void loop()
 {
   
   EthernetClient client = server.available();  // try to get client
-
+  delay(100); //задержка для обработки запросов
   if (client) {  // got client?
     boolean currentLineIsBlank = true;
     while (client.connected()) {
@@ -90,15 +91,17 @@ void loop()
           client.println("Content-Type: text/xml");
           client.println("Connection: keep-alive");
           client.println();
-          //место собственных функций
+         //место собственных функций
+         
           SetLights();
           sensorTempRead();  //Опрос датчика температуры
           getGerkon(); //состояние геркона
           setTV(); //отправляем команды на IR led
+         
           // send XML file containing input states
           XML_response(client);
           // display received HTTP request on serial port
-          Serial.print(HTTP_req);
+          Serial.println(HTTP_req);
           // reset buffer index and all buffer elements to 0
           req_index = 0;
           StrClear(HTTP_req, REQ_BUF_SZ);
@@ -119,6 +122,9 @@ void loop()
     delay(1);      // give the web browser time to receive the data
     client.stop(); // close the connection
   } // end if (client)
+  Serial.println("Loop ends");
+  // wdt_reset();//сбрасываес Watchdog
+   
 }
 
 
@@ -141,6 +147,9 @@ void sensorTempRead() {
 
   temp1 = (int) tempSensor1;
   temp2 = (int) tempSensor2;
+  
+  Serial.print("Read temp: ");
+  Serial.println(temp1, temp2);
 
 }
 
